@@ -1,21 +1,15 @@
 package net.gags;
 
-import java.net.URL;
-import java.util.Iterator;
-
-import net.gags.util.HtmlUtil;
-
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
+import net.gags.model.Gags;
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
 public class MainActivity extends Activity
 {
+    
+    private Gags gags;
+    private ImageView gagView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -23,37 +17,18 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        ImageView gag = (ImageView) findViewById(R.id.gag);
+        gagView = (ImageView) findViewById(R.id.gag);
         
         try
         {
-            Elements elem = HtmlUtil.get("http://9gag.com/", "div.content");
-            Iterator<Element> i = elem.iterator();
-            
-//            while(i.hasNext())
-            if(i.hasNext())
-            {
-                Element e = i.next();
-                Log.i("ID", getImageID(e));
-                Log.i("URL", getImageURL(e));
-//                gag.setImageURI(new Uri(getImageURL(e)));
-            }
+            gags = new Gags(Gags.HOT_PAGE);
+            gagView.setImageURI(gags.getCurrentGagUri());
         }
-        catch(Exception ex)
+        catch(Exception e)
         {
-            Log.e("IOException", ex.getMessage());
+            e.printStackTrace();
         }
         
-//        gag.setImageURI(uri);
     }
     
-    private String getImageID(Element e)
-    {
-        return HtmlUtil.getAttributeValue(e, "a", "href");
-    }
-    
-    private String getImageURL(Element e)
-    {
-        return HtmlUtil.getAttributeValue(e, "img", "src");
-    }
 }
