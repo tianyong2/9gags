@@ -36,14 +36,20 @@ public class Gag
         this.localUrl = localDir+id+".jpg";
         
         Log.i("LocalURL", localUrl);
-
-//        requestImage();
     }
     
-    public void requestImage() throws MalformedURLException, IOException
+    private Bitmap requestGag() throws MalformedURLException, IOException
     {
         Bitmap bitmap = BitmapFactory.decodeStream(new URL(url).openStream());
         bitmap.compress(CompressFormat.JPEG, 100, new FileOutputStream(localUrl));
+        return bitmap;
+    }
+    
+    public Bitmap getBitmap() throws MalformedURLException, IOException
+    {
+        if(new File(localUrl).exists())
+            return BitmapFactory.decodeFile(localUrl);
+        else return requestGag();
     }
     
     public int getId()
