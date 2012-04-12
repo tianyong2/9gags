@@ -1,6 +1,5 @@
 package net.gags.model;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -11,7 +10,8 @@ import net.gags.util.HtmlUtil;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.os.Handler;
 import android.util.Log;
 
 public class Gags
@@ -25,17 +25,18 @@ public class Gags
     private ArrayList<Gag> gags;
     private int index;
     
+    private ArrayList<Handler> gagHandlers;
+    
     
     public Gags(String page) throws IOException
     {
         this.page = page;
         gags = new ArrayList<Gag>();
+        gagHandlers = new ArrayList<Handler>();
         index = 0;
-        
-        parseGags();
     }
     
-    private void parseGags() throws IOException
+    public void refresh() throws IOException
     {
         Elements elem = HtmlUtil.get(page, "div.content");
         Iterator<Element> i = elem.iterator();
@@ -59,12 +60,39 @@ public class Gags
                 Log.e("Error", ex.getMessage());
             }
         }
+        
+        notifyGagHandlers();
     }
     
-    public Uri getCurrentGagUri() throws MalformedURLException, IOException
+    public Bitmap getCurrentGag() throws MalformedURLException, IOException
     {
-        gags.get(index).requestImage();
-        return Uri.fromFile(new File(gags.get(index).getLocalUrl()));
+        return gags.get(index).getBitmap();
+    }
+    
+    public void previous()
+    {
+        if(index > 0) index--;
+    }
+    
+    public void next()
+    {
+        if(index < gags.size()-1) index++;
+    }
+    
+    private void notifyGagHandlers()
+    {
+//        for(Handler handler : gagHandlers)
+//            handler.
+    }
+    
+    public void addGagHandler(Handler handler)
+    {
+        gagHandlers.add(handler);
+    }
+    
+    public void removeGagHandler(Handler handler)
+    {
+        gagHandlers.remove(handler);
     }
     
     private int getGagID(Element e)
