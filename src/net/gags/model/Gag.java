@@ -9,15 +9,15 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
-import android.util.Log;
 
 public class Gag {
 
     private static String localDir;
 
-    private int id;
-    private String url;
+    private int gagid;
+    private String gagUrl;
     private String title;
+    private String imageUrl;
     private String localUrl;
 
     static {
@@ -25,17 +25,16 @@ public class Gag {
         new File(localDir).mkdirs();
     }
 
-    public Gag(int id, String url, String title) throws IOException {
-        this.id = id;
-        this.url = url;
+    public Gag(int gagid, String gagUrl, String title, String imageUrl) {
+        this.gagid = gagid;
+        this.gagUrl = gagUrl;
         this.title = title;
-        this.localUrl = localDir + id + ".jpg";
-
-        Log.i("LocalURL", localUrl);
+        this.imageUrl = imageUrl;
+        this.localUrl = localDir + gagid + ".jpg";
     }
 
     private Bitmap requestGag() throws IOException {
-        Bitmap bitmap = BitmapFactory.decodeStream(new URL(url).openStream());
+        Bitmap bitmap = BitmapFactory.decodeStream(new URL(imageUrl).openStream());
         bitmap.compress(CompressFormat.JPEG, 100, new FileOutputStream(localUrl));
         return bitmap;
     }
@@ -47,20 +46,24 @@ public class Gag {
             return requestGag();
     }
 
-    public int getId() {
-        return id;
+    public int getGagId() {
+        return gagid;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public String getLocalUrl() {
-        return localUrl;
+    public String getGagUrl() {
+        return gagUrl;
     }
 
     public String getTitle() {
         return title;
+    }
+    
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    
+    public String getLocalUrl() {
+        return localUrl;
     }
 
 }
