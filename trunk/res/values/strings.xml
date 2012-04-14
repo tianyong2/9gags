@@ -2,10 +2,12 @@
 <resources>
 
     <string name="hello">Hello World, MainActivity!</string>
-    <string name="app_name">9Gaggs</string>
+    <string name="app_name">9Gags</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="gag">Gag</string>
     <string name="title">Title</string>
+    <string name="page">Page</string>
+    <string name="number">number</string>
 
 </resources>
