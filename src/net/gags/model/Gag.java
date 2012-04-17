@@ -10,8 +10,9 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 
-public class Gag {
-
+public class Gag
+{
+    
     private static String localDir;
 
     private int gagid;
@@ -19,13 +20,16 @@ public class Gag {
     private String title;
     private String imageUrl;
     private String localUrl;
-
-    static {
+    
+    
+    static
+    {
         localDir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/9Gags/gags/";
         new File(localDir).mkdirs();
     }
 
-    public Gag(int gagid, String gagUrl, String title, String imageUrl) {
+    public Gag(int gagid, String gagUrl, String title, String imageUrl)
+    {
         this.gagid = gagid;
         this.gagUrl = gagUrl;
         this.title = title;
@@ -33,36 +37,43 @@ public class Gag {
         this.localUrl = localDir + gagid + ".jpg";
     }
 
-    private Bitmap requestGag() throws IOException {
+    private Bitmap requestGag() throws IOException
+    {
         Bitmap bitmap = BitmapFactory.decodeStream(new URL(imageUrl).openStream());
         bitmap.compress(CompressFormat.JPEG, 100, new FileOutputStream(localUrl));
         return bitmap;
     }
 
-    public Bitmap getBitmap() throws IOException {
-        if (new File(localUrl).exists())
+    public Bitmap getBitmap() throws IOException
+    {
+        if(new File(localUrl).exists())
             return BitmapFactory.decodeFile(localUrl);
         else
             return requestGag();
     }
 
-    public int getGagId() {
+    public int getGagId()
+    {
         return gagid;
     }
 
-    public String getGagUrl() {
+    public String getGagUrl()
+    {
         return gagUrl;
     }
 
-    public String getTitle() {
+    public String getTitle()
+    {
         return title;
     }
-    
-    public String getImageUrl() {
+
+    public String getImageUrl()
+    {
         return imageUrl;
     }
-    
-    public String getLocalUrl() {
+
+    public String getLocalUrl()
+    {
         return localUrl;
     }
 
