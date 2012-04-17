@@ -9,5 +9,6 @@
     <string name="title">Title</string>
     <string name="page">Page</string>
     <string name="number">number</string>
+    <string name="loading_page">Loading page</string>
 
 </resources>

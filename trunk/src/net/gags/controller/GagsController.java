@@ -1,55 +1,63 @@
 package net.gags.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-import net.gags.model.Gag;
 import net.gags.model.GagsIterator;
 import android.graphics.Bitmap;
 
-public class GagsController {
+public class GagsController
+{
 
     public static final String HOT_PAGE = GagsIterator.HOT_PAGE;
     public static final String TRENDING_PAGE = GagsIterator.TRENDING_PAGE;
     public static final String VOTE_PAGE = GagsIterator.VOTE_PAGE;
-
+    
     private GagsIterator iterator;
     
-    private ArrayList<ChangeListener> changeListeners;
+    private List<ChangeListener> listeners;
+    
+    
+    public static interface ChangeListener
+    {
+        void onPreLoading();
+        
+        void onGagInfo(int pageIndex, int gagIndex, int numberOfGags, String title);
 
-    public static interface ChangeListener {
-        void onGagChange(int pageIndex, String title, Bitmap image);
+        void onGagImage(Bitmap image);
+        
+        void onException(Exception ex);
     }
 
-    public GagsController(String page) {
-        changeListeners = new ArrayList<ChangeListener>();
+    public GagsController(String page)
+    {
+        listeners = new ArrayList<ChangeListener>();
         iterator = new GagsIterator(page);
     }
 
-    public void previous() throws IOException {
-        Gag gag = iterator.previous();
-        notifyChangeListeners(gag);
+    public void previous()
+    {
+        getGagLoader(GagLoader.PREVIOUS).execute(iterator);
     }
 
-    public void next() throws IOException {
-        Gag gag = iterator.next();
-        notifyChangeListeners(gag);
+    public void next()
+    {
+        getGagLoader(GagLoader.NEXT).execute(iterator);
     }
 
-    private void notifyChangeListeners(Gag gag) throws IOException {
-        String title = gag.getTitle();
-        Bitmap bitmap = gag.getBitmap();
-        
-        for (ChangeListener listener : changeListeners)
-            listener.onGagChange(iterator.getPageIndex(), title, bitmap);
+    private GagLoader getGagLoader(int operation)
+    {
+        return new GagLoader(listeners, new GagInfo(), operation);
     }
 
-    public void addGagHandler(ChangeListener listener) {
-        changeListeners.add(listener);
+    public void addListener(ChangeListener listener)
+    {
+        listeners.add(listener);
     }
 
-    public void removeGagHandler(ChangeListener listener) {
-        changeListeners.remove(listener);
+    public void removeListener(ChangeListener listener)
+    {
+        listeners.remove(listener);
     }
-
+    
 }
